@@ -1,8 +1,12 @@
-# Private stuff
+# Backups and private stuff
+*-backup*
 *-private*
 
 # Editor
 ./.vscode
+
+# EduMIPS64
+edumips**.jar
 
 # List of registers
 registry.txt
