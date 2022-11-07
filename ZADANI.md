@@ -13,11 +13,11 @@ V jazyku symbolických instrukcí MIPS64 a s využitím simulátoru EduMIPS64 na
 
 zpráva: xbidlo01, klíč: bi (‘b’ posouvá o 2 znaky vpřed, ‘i’ posouvá o 9 znaků vzad). Postup šifrování:
 
-  zpráva: x  b  i  d  l  o  0  1
-  klíč:   b  i  b  i  b  i  
-  posuv: +2 -9 +2 -9 +2 -9
-  \------------------------------
-          z  s  k  u  n  f
+  zpráva: x  b  i  d  l  o  0  1<br />
+  klíč:   b  i  b  i  b  i<br />
+  posuv: +2 -9 +2 -9 +2 -9<br />
+  \------------------------------<br />
+          z  s  k  u  n  f<br />
 
 ## Pokyny k řešení
 
