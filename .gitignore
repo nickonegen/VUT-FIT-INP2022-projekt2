@@ -1,0 +1,8 @@
+# Private stuff
+*-private*
+
+# Editor
+./.vscode
+
+# List of registers
+registry.txt
