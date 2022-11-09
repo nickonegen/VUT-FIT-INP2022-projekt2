@@ -4,12 +4,12 @@
 ; Vernamova sifra na architekture MIPS64
 
 ; Moje registre
-; R0  ($zero) - nulova konstanta
-; R1  ($at)   - assembler temp.
-; R4  ($a0)   - function arg.
-; R10 ($t2)   - temp. reg.
-; R20 ($s4)   - saved reg.
-; R29 ($sp)   - stack pointer
+;  R0  ($zero) - nulova konstanta
+;  R1  ($at)   - assembler temp.
+;  R4  ($a0)   - function arg.
+;  R10 ($t2)   - temporary reg.
+;  R20 ($s4)   - saved reg.
+;  R29 ($sp)   - stack pointer
 
 ; DATA SEGMENT
                 .data
@@ -34,22 +34,21 @@ encryptLoop:
                 BNEZ            R1, encryptEnd              ; Ak R1 = 1, koniec sifrovania
 
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
-                ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 DADDI           R4, R0, key                 ; R4 = adresa kluca
+                ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 DADD            R4, R4, R1
                 LB              R4, 0(R4)                   ; R4 = ASCII znak kluca na pozicii R1
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
                 DADD            R10, R10, R4                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
 
                 ; Posunutie znaku o 26 ak je vysledok mimo rozsah ASCII malych pismen (97-122)
-                XOR             R4, R4, R4                  ; R4 = 0
-                DADDI           R10, R10, -122
-                SLTI            R4, R10, 1
+                DADDI           R10, R10, -123
+                SLTI            R4, R10, 0
                 XORI            R4, R4, 1                   ; R4 = 1 ak je vysledok mimo rozsahu, inak R4 = 0
                 DADDI           R1, R0, -26
                 DMULT           R4, R1
                 MFLO            R4                          ; R4 = -26 ak je vysledok mimo rozsahu, inak R4 = 0
-                DADDI           R10, R10, 122               ; R10 = povodny sifrovany znak
+                DADDI           R10, R10, 123               ; R10 = povodny sifrovany znak
                 DADD            R10, R10, R4                ; R10 = sifrovany znak s modulom
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
