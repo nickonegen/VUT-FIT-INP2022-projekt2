@@ -26,8 +26,8 @@ main:
 encryptLoop:
                 ; Ulozenie adresy retazca
                 DADDI           R4, R0, login               ; R4 = adresa retazca na sifrovanie
-                ADD             R1, R4, R20
-                LB              R10, 0(R1)                  ; R10 = ASCII znak na aktualnej pozicii
+                DADD            R4, R4, R20
+                LB              R10, 0(R4)                  ; R10 = ASCII znak na aktualnej pozicii
 
                 ; Ak znak nie je male pismeno, koniec cyklu
                 SLTI            R1, R10, 96                 ; R1 = 1 ak je ASCII znak < 96, inak R1 = 0
@@ -36,10 +36,10 @@ encryptLoop:
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
                 ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 DADDI           R4, R0, key                 ; R4 = adresa kluca
-                ADD             R1, R1, R4
-                LB              R4, 0(R1)                   ; R4 = ASCII znak kluca na pozicii R1
+                DADD            R4, R4, R1
+                LB              R4, 0(R4)                   ; R4 = ASCII znak kluca na pozicii R1
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
-                ADD             R10, R10, R4                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
+                DADD            R10, R10, R4                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
 
                 ; Posunutie znaku o 26 ak je vysledok mimo rozsah ASCII malych pismen (97-122)
                 XOR             R4, R4, R4                  ; R4 = 0
@@ -54,8 +54,8 @@ encryptLoop:
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
                 DADDI           R4, R0, cipher              ; R4 = adresa vystupneho retazca
-                ADD             R1, R4, R20
-                SB              R10, 0(R1)                  ; vlozenie sifrovaneho znaku do vystupneho retazca
+                ADD             R4, R4, R20
+                SB              R10, 0(R4)                  ; vlozenie sifrovaneho znaku do vystupneho retazca
 
                 ; Pokracovanie cyklu
                 DADDI           R20, R20, 1                 ; R20 = index + 1
