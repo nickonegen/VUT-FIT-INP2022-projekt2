@@ -7,7 +7,7 @@
 ; R0  ($zero) - nulova konstanta
 ; R1  ($at)   - unsafe temp.      - pomocny register
 ; R4  ($a0)   - function arg.     - ukazatel na retazec
-; R10 ($t2)   - temp. reg.        - pomocny register
+; R10 ($t2)   - temp. reg.        - hodnota kluca pre index
 ; R20 ($s4)   - saved reg.        - index v retazci (pocitadlo)
 ; R29 ($sp)   - stack pointer
 
@@ -26,10 +26,16 @@ main:
                 DADDI           R20, R0, 0                  ; R20 = index v retazci (pocitadlo)
 
 encryptLoop:
+                ; Ziskanie hodnoty kluca pre aktualny index
                 ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 DADDI           R10, R0, key                ; R10 = adresa kluca
                 ADD             R1, R1, R10
-                LB              R10, 0(R1)                  ; R10 = znak kluca na pozicii R1
+                LB              R10, 0(R1)                  ; R10 = ASCII znak kluca na pozicii R1
+                DADDI           R10, R10, -96               ; R10 = hodnota kluca
+
+                ; Scitanie hodnoty kluca s aktualnym ASCII znakom v retazci
+                LB              R1, 0(R4)                   ; R1 = ASCII znak na aktualnej pozicii
+                ADD             R10, R10, R1                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
 
 end:
                 JAL             print_string
