@@ -37,9 +37,16 @@ encryptLoop:
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
                 DADDI           R4, R0, key                 ; R4 = adresa kluca
                 ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
-                DADD            R4, R4, R1
-                LB              R4, 0(R4)                   ; R4 = ASCII znak kluca na pozicii R1
+                BNEZ            R1, keyIfOdd
+                ; Parny index - kluc je 'o' (ASCII 111), posun dopredu (+)
+                DADDI           R4, R0, 111
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
+                B               keyIfEnd
+keyIfOdd:       ; Neparny index - kluc je 'n' (ASCII 110), posun dozadu (-)
+                DADDI           R4, R0, -110
+                DADDI           R4, R4, 96                 ; R4 = hodnota kluca
+keyIfEnd:
+                ; Zasifrovanie znaku
                 DADD            R10, R10, R4                ; R10 = hodnota sifrovaneho znaku
 
                 ; Posunutie znaku ak je vysledok mimo rozsah malych pismen (1-26)
