@@ -14,28 +14,26 @@
 ; DATA SEGMENT
                 .data
 login:          .asciiz         "xkrame00"                  ; login
-key:            .asciiz         "on"                        ; sifrovaci kluc
 cipher:         .space          17                          ; miesto pre sifrovany login
 params_sys5:    .space          8                           ; miesto pre adresu pociatku retazca
 
 ; CODE SEGMENT
                 .text
-main:
-                DADDI           R20, R0, 0                  ; R20 = index v retazci (pocitadlo)
-
+main:           DADDI           R20, R0, 0                  ; R20 = index v retazci (pocitadlo)
 encryptLoop:
-                ; Ulozenie adresy retazca
+                ; Ulozenie znaku na aktualnom indexe
                 DADDI           R4, R0, login               ; R4 = adresa retazca na sifrovanie
                 DADD            R4, R4, R20
                 LB              R10, 0(R4)                  ; R10 = ASCII znak na aktualnej pozicii
 
-                ; Ak znak nie je male pismeno, koniec cyklu
+                ; Ak znak nie je male pismeno (ASCII 97-122), cyklus konci
                 SLTI            R1, R10, 96                 ; R1 = 1 ak je ASCII znak < 96, inak R1 = 0
                 BNEZ            R1, encryptEnd              ; Ak R1 = 1, koniec sifrovania
-                DADDI           R10, R10, -96               ; R10 = hodnota znaku
+                SLTI            R1, R10, 123                ; R1 = 1 ak je ASCII znak < 123, inak R1 = 0
+                BEQZ            R1, encryptEnd              ; Ak R1 = 0, koniec sifrovania
 
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
-                DADDI           R4, R0, key                 ; R4 = adresa kluca
+                DADDI           R10, R10, -96               ; R10 = hodnota znaku (abecedne poradie)
                 ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 BNEZ            R1, keyIfOdd
                 ; Parny index - kluc je 'o' (ASCII 111), posun dopredu (+)
@@ -44,9 +42,8 @@ encryptLoop:
                 B               keyIfEnd
 keyIfOdd:       ; Neparny index - kluc je 'n' (ASCII 110), posun dozadu (-)
                 DADDI           R4, R0, -110
-                DADDI           R4, R4, 96                 ; R4 = hodnota kluca
-keyIfEnd:
-                ; Zasifrovanie znaku
+                DADDI           R4, R4, 96                  ; R4 = hodnota kluca
+keyIfEnd:       ; Zasifrovanie znaku
                 DADD            R10, R10, R4                ; R10 = hodnota sifrovaneho znaku
 
                 ; Posunutie znaku ak je vysledok mimo rozsah malych pismen (1-26)
@@ -74,8 +71,7 @@ keyIfEnd:
                 DADDI           R20, R20, 1                 ; R20 = index + 1
                 B               encryptLoop
 
-encryptEnd:
-                ; Vlozenie vyslednej sifry do R4
+encryptEnd:     ; Vypis vystupneho retazca
                 DADDI           R4, R0, cipher
                 JAL             print_string
                 SYSCALL         0
