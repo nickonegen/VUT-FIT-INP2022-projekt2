@@ -11,7 +11,6 @@
 ; R20 ($s4)   - saved reg.
 ; R29 ($sp)   - stack pointer
 
-
 ; DATA SEGMENT
                 .data
 login:          .asciiz         "xkrame00"                  ; login
@@ -48,6 +47,11 @@ encryptLoop:
                 MFLO            R4                          ; R4 = -26 ak je vysledok mimo rozsahu, inak R4 = 0
                 DADDI           R10, R10, 122               ; R10 = povodny sifrovany znak
                 DADD            R10, R10, R4                ; R10 = sifrovany znak s modulom
+
+                ; Vlozenie sifrovaneho znaku do vystupneho retazca
+                DADDI           R4, R0, cipher              ; R4 = adresa vystupneho retazca
+                ADD             R1, R4, R20
+                SB              R10, 0(R1)                  ; vlozenie sifrovaneho znaku do vystupneho retazca
 
 end:
                 JAL             print_string
