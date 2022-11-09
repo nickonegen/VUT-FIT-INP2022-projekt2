@@ -5,10 +5,10 @@
 
 ; Moje registre
 ; R0  ($zero) - nulova konstanta
-; R1  ($at)   - unsafe temp.      - pomocny register
-; R4  ($a0)   - function arg.     - ukazatel na retazec
-; R10 ($t2)   - temp. reg.        - hodnota kluca pre index
-; R20 ($s4)   - saved reg.        - index v retazci (pocitadlo)
+; R1  ($at)   - assembler temp.
+; R4  ($a0)   - function arg.
+; R10 ($t2)   - temp. reg.
+; R20 ($s4)   - saved reg.
 ; R29 ($sp)   - stack pointer
 
 
@@ -34,8 +34,20 @@ encryptLoop:
                 DADDI           R10, R10, -96               ; R10 = hodnota kluca
 
                 ; Scitanie hodnoty kluca s aktualnym ASCII znakom v retazci
-                LB              R1, 0(R4)                   ; R1 = ASCII znak na aktualnej pozicii
+                DADDI           R4, R0, login               ; R4 = adresa retazca na sifrovanie
+                ADD             R1, R4, R20
+                LB              R1, 0(R1)                   ; R1 = ASCII znak na aktualnej pozicii
                 ADD             R10, R10, R1                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
+                ; Ak je vysledok mimo rozsah ASCII malych pismen (97-122), tak sa znak posunie o 26 znakov
+                XOR             R4, R4, R4                  ; R4 = 0
+                DADDI           R10, R10, -122
+                SLTI            R4, R10, 1
+                XORI            R4, R4, 1                   ; R4 = 1 ak je vysledok mimo rozsahu, inak R4 = 0
+                DADDI           R1, R0, -26
+                DMULT           R4, R1
+                MFLO            R4                          ; R4 = -26 ak je vysledok mimo rozsahu, inak R4 = 0
+                DADDI           R10, R10, 122               ; R10 = povodny sifrovany znak
+                DADD            R10, R10, R4                ; R10 = sifrovany znak s modulom
 
 end:
                 JAL             print_string
