@@ -32,6 +32,7 @@ encryptLoop:
                 ; Ak znak nie je male pismeno, koniec cyklu
                 SLTI            R1, R10, 96                 ; R1 = 1 ak je ASCII znak < 96, inak R1 = 0
                 BNEZ            R1, encryptEnd              ; Ak R1 = 1, koniec sifrovania
+                DADDI           R10, R10, -96               ; R10 = hodnota znaku
 
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
                 DADDI           R4, R0, key                 ; R4 = adresa kluca
@@ -39,19 +40,25 @@ encryptLoop:
                 DADD            R4, R4, R1
                 LB              R4, 0(R4)                   ; R4 = ASCII znak kluca na pozicii R1
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
-                DADD            R10, R10, R4                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
+                DADD            R10, R10, R4                ; R10 = hodnota sifrovaneho znaku
 
-                ; Posunutie znaku o 26 ak je vysledok mimo rozsah ASCII malych pismen (97-122)
-                DADDI           R10, R10, -123
-                SLTI            R4, R10, 0
-                XORI            R4, R4, 1                   ; R4 = 1 ak je vysledok mimo rozsahu, inak R4 = 0
+                ; Posunutie znaku ak je vysledok mimo rozsah malych pismen (1-26)
+                ; Znak je mensi ako 'a'
+                SLTI            R4, R10, 1                  ; R4 = 1 ak je hodnota menej ako 'a', inak R1 = 0
+                DADDI           R1, R0, 26
+                DMULT           R4, R1
+                MFLO            R4                          ; R4 = 26 ak je hodnota menej ako 'a', inak R1 = 0
+                DADD            R10, R10, R4
+                ; Znak je vacsi ako 'z'
+                SLTI            R4, R10, 27
+                XORI            R4, R4, 1                   ; R4 = 1 ak je hodnota vacsia ako 'z', inak R1 = 0
                 DADDI           R1, R0, -26
                 DMULT           R4, R1
-                MFLO            R4                          ; R4 = -26 ak je vysledok mimo rozsahu, inak R4 = 0
-                DADDI           R10, R10, 123               ; R10 = povodny sifrovany znak
-                DADD            R10, R10, R4                ; R10 = sifrovany znak s modulom
+                MFLO            R4                          ; R4 = -26 ak je hodnota vacsia ako 'z', inak R1 = 0
+                DADD            R10, R10, R4
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
+                DADDI           R10, R10, 96                ; R10 = ASCII hodnota sifrovaneho znaku
                 DADDI           R4, R0, cipher              ; R4 = adresa vystupneho retazca
                 ADD             R4, R4, R20
                 SB              R10, 0(R4)                  ; vlozenie sifrovaneho znaku do vystupneho retazca
