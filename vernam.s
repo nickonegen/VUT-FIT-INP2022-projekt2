@@ -39,7 +39,7 @@ encryptLoop:
                 ADD             R1, R1, R4
                 LB              R4, 0(R1)                   ; R4 = ASCII znak kluca na pozicii R1
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
-                ADD             R10, R10, R1                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
+                ADD             R10, R10, R4                ; R10 = ASCII znak na aktualnej pozicii + hodnota kluca
 
                 ; Posunutie znaku o 26 ak je vysledok mimo rozsah ASCII malych pismen (97-122)
                 XOR             R4, R4, R4                  ; R4 = 0
