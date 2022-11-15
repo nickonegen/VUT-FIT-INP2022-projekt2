@@ -21,7 +21,6 @@ encryptLoop:
                 BEQZ            R1, encryptEnd
 
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
-                DADDI           R10, R10, -96               ; R10 = hodnota znaku (abecedne poradie)
                 ANDI            R1, R20, 1                  ; R1 = 0 ak je index parny, inak R1 = 1
                 BNEZ            R1, keyIfOdd
                 ; Parny index - kluc je 'o' (ASCII 111), posun dopredu (+)
@@ -32,23 +31,21 @@ keyIfOdd:       ; Neparny index - kluc je 'n' (ASCII 110), posun dozadu (-)
                 DADDI           R4, R0, -110
                 DADDI           R4, R4, 96                  ; R4 = hodnota kluca
 keyIfEnd:       ; Zasifrovanie znaku
-                DADD            R10, R10, R4                ; R10 = hodnota sifrovaneho znaku
+                DADD            R10, R10, R4                ; R10 = ASCII znak sifrovaneho znaku
 
                 ; Kontrola rozsahu malych pismen (1-26)
                 ; Znak je mensi ako 'a'
-                SLTI            R4, R10, 1                  ; R4 = 0 ak je hodnota menej ako 'a', inak R1 = 1
+                SLTI            R4, R10, 97                 ; R4 = 0 ak je znak mensi ako 'a', inak R1 = 1
                 BEQZ            R4, noUnderflow
                 DADDI           R10, R10, 26                ; Underflow correction
 noUnderflow:    ; Znak je vacsi ako 'z'
-                SLTI            R4, R10, 27                 ; R4 = 0 ak je hodnota vacsia ako 'z', inak R1 = 1
+                SLTI            R4, R10, 123                ; R4 = 0 ak je znak vacsi ako 'z', inak R1 = 1
                 BNEZ            R4, noOverflow
                 DADDI           R10, R10, -26               ; Overflow correction
 noOverflow:     ; Koniec kontroly rozsahu
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
-                DADDI           R10, R10, 96                ; R10 = ASCII hodnota sifrovaneho znaku
                 SB              R10, cipher(R20)            ; vlozenie sifrovaneho znaku do vystupneho retazca
-
                 ; Pokracovanie cyklu
                 DADDI           R20, R20, 1                 ; R20 = index++
                 B               encryptLoop
