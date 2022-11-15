@@ -16,9 +16,9 @@ encryptLoop:
 
                 ; Ak znak nie je male pismeno (ASCII 97-122), cyklus konci
                 SLTI            R1, R10, 96                 ; R1 = 1 ak je ASCII znak < 96, inak R1 = 0
-                BNEZ            R1, encryptEnd              ; Ak R1 = 1, koniec sifrovania
+                BNEZ            R1, encryptEnd
                 SLTI            R1, R10, 123                ; R1 = 1 ak je ASCII znak < 123, inak R1 = 0
-                BEQZ            R1, encryptEnd              ; Ak R1 = 0, koniec sifrovania
+                BEQZ            R1, encryptEnd
 
                 ; Ziskanie hodnoty kluca pre aktualny index a zasifrovanie znaku
                 DADDI           R10, R10, -96               ; R10 = hodnota znaku (abecedne poradie)
@@ -34,20 +34,16 @@ keyIfOdd:       ; Neparny index - kluc je 'n' (ASCII 110), posun dozadu (-)
 keyIfEnd:       ; Zasifrovanie znaku
                 DADD            R10, R10, R4                ; R10 = hodnota sifrovaneho znaku
 
-                ; Posunutie znaku ak je vysledok mimo rozsah malych pismen (1-26)
+                ; Kontrola rozsahu malych pismen (1-26)
                 ; Znak je mensi ako 'a'
-                SLTI            R4, R10, 1                  ; R4 = 1 ak je hodnota menej ako 'a', inak R1 = 0
-                DADDI           R1, R0, 26
-                DMULT           R4, R1
-                MFLO            R4                          ; R4 = 26 ak je hodnota menej ako 'a', inak R1 = 0
-                DADD            R10, R10, R4
-                ; Znak je vacsi ako 'z'
-                SLTI            R4, R10, 27
-                XORI            R4, R4, 1                   ; R4 = 1 ak je hodnota vacsia ako 'z', inak R1 = 0
-                DADDI           R1, R0, -26
-                DMULT           R4, R1
-                MFLO            R4                          ; R4 = -26 ak je hodnota vacsia ako 'z', inak R1 = 0
-                DADD            R10, R10, R4
+                SLTI            R4, R10, 1                  ; R4 = 0 ak je hodnota menej ako 'a', inak R1 = 1
+                BEQZ            R4, noUnderflow
+                DADDI           R10, R10, 26                ; Underflow correction
+noUnderflow:    ; Znak je vacsi ako 'z'
+                SLTI            R4, R10, 27                 ; R4 = 0 ak je hodnota vacsia ako 'z', inak R1 = 1
+                BNEZ            R4, noOverflow
+                DADDI           R10, R10, -26               ; Overflow correction
+noOverflow:     ; Koniec kontroly rozsahu
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
                 DADDI           R10, R10, 96                ; R10 = ASCII hodnota sifrovaneho znaku
