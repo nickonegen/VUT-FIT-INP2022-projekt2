@@ -10,8 +10,7 @@ params_sys5:    .space          8                           ; miesto pre adresu 
 
                 .text
 main:           DADDI           R20, R0, 0                  ; R20 = index v retazci (pocitadlo)
-encryptLoop:
-                ; Ulozenie znaku na aktualnom indexe
+encryptLoop:    ; Ulozenie znaku na aktualnom indexe
                 LB              R10, login(R20)             ; R10 = ASCII znak na aktualnej pozicii
 
                 ; Ak znak nie je male pismeno (ASCII 97-122), cyklus konci
@@ -28,8 +27,9 @@ encryptLoop:
                 DADDI           R4, R4, -96                 ; R4 = hodnota kluca
                 B               keyIfEnd
 keyIfOdd:       ; Neparny index - kluc je 'n' (ASCII 110), posun dozadu (-)
-                DADDI           R4, R0, -110
-                DADDI           R4, R4, 96                  ; R4 = hodnota kluca
+                DADDI           R4, R0, 110
+                DADDI           R4, R4, -96
+                DSUB            R4, R0, R4                  ; R4 = hodnota kluca
 keyIfEnd:       ; Zasifrovanie znaku
                 DADD            R10, R10, R4                ; R10 = ASCII znak sifrovaneho znaku
 
