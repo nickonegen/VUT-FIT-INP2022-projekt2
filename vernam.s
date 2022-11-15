@@ -12,9 +12,7 @@ params_sys5:    .space          8                           ; miesto pre adresu 
 main:           DADDI           R20, R0, 0                  ; R20 = index v retazci (pocitadlo)
 encryptLoop:
                 ; Ulozenie znaku na aktualnom indexe
-                DADDI           R4, R0, login               ; R4 = adresa retazca na sifrovanie
-                DADD            R4, R4, R20
-                LB              R10, 0(R4)                  ; R10 = ASCII znak na aktualnej pozicii
+                LB              R10, login(R20)             ; R10 = ASCII znak na aktualnej pozicii
 
                 ; Ak znak nie je male pismeno (ASCII 97-122), cyklus konci
                 SLTI            R1, R10, 96                 ; R1 = 1 ak je ASCII znak < 96, inak R1 = 0
@@ -53,9 +51,7 @@ keyIfEnd:       ; Zasifrovanie znaku
 
                 ; Vlozenie sifrovaneho znaku do vystupneho retazca
                 DADDI           R10, R10, 96                ; R10 = ASCII hodnota sifrovaneho znaku
-                DADDI           R4, R0, cipher              ; R4 = adresa vystupneho retazca
-                ADD             R4, R4, R20
-                SB              R10, 0(R4)                  ; vlozenie sifrovaneho znaku do vystupneho retazca
+                SB              R10, cipher(R20)            ; vlozenie sifrovaneho znaku do vystupneho retazca
 
                 ; Pokracovanie cyklu
                 DADDI           R20, R20, 1                 ; R20 = index++
