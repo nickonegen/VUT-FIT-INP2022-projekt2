@@ -1,6 +1,10 @@
 # Backups and private stuff
+x*
 *-backup*
 *-private*
+
+# Test script (read README.md)
+test.py
 
 # Editor
 ./.vscode
