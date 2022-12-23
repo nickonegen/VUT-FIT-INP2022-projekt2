@@ -2,9 +2,9 @@
 
 *Druhý projekt (Vernamova šifra v MIPS64) z predmetu Návrh počítačových systémov (INP), tretí semester bakalárskeho štúdia BIT na FIT VUT/BUT, ak.rok 2022/2023*
 
-🔒 **Aktívny súkromný repozitár — nezverejňovať!**
+⚠️ **Zverejnené pre archívne účely — nekopírujte, nula by Vás mrzela. Za nič také nenesiem žiadnu zodpovednosť!** Všetky odovzdané projekty prechádzajú kontrolou plagiátorstva, pri ktorej sa porovnávajú aj s dávnejšie odovzdanými riešeniami.
 
-Hodnotenie: ?? / ??<br>（?）
+Hodnotenie: 10 / 10<br>（ISU good <img alt=":FeelsGoodEnoughMan:" src="https://user-images.githubusercontent.com/84882649/205744506-72b9a7a0-79d2-444d-b97a-db756f012b80.png" height="16px" />）
 
 Zadanie: [ZADANI.md](ZADANI.md), originál [MOODLE ZIP](https://moodle.vut.cz/mod/resource/view.php?id=252802)
 
