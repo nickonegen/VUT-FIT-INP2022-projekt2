@@ -13,3 +13,4 @@ Zadanie: [ZADANI.md](ZADANI.md), originál [MOODLE ZIP](https://moodle.vut.cz/mo
 * [EduMIPS64 Instruction Set](https://edumips64.readthedocs.io/en/latest/instructions.html)
 * [MIPS Register-File](https://en.wikibooks.org/wiki/MIPS_Assembly/Register_File)
 * [Test-Skript](https://discord.com/channels/461541385204400138/591341581701873699/1042606303069089915)
+
